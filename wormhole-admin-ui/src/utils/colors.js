@@ -1,4 +1,4 @@
-import $ from 'jquery';
+// import $ from 'jquery'
 
 // Color related utility functions go in this object
 export const bnbColors = [
@@ -23,44 +23,44 @@ export const bnbColors = [
   '#55d12e',
   '#b37e00',
   '#988b4e',
-];
+]
 
-const spectrums = {
-  blue_white_yellow: [
-    '#00d1c1',
-    'white',
-    '#ffb400',
-  ],
-  fire: [
-    'white',
-    'yellow',
-    'red',
-    'black',
-  ],
-  white_black: [
-    'white',
-    'black',
-  ],
-  black_white: [
-    'black',
-    'white',
-  ],
-};
+// const spectrums = {
+//   blue_white_yellow: [
+//     '#00d1c1',
+//     'white',
+//     '#ffb400',
+//   ],
+//   fire: [
+//     'white',
+//     'yellow',
+//     'red',
+//     'black',
+//   ],
+//   white_black: [
+//     'white',
+//     'black',
+//   ],
+//   black_white: [
+//     'black',
+//     'white',
+//   ],
+// }
 
 export const category21 = (function () {
   // Color factory
-  const seen = {};
+  const seen = {}
   return function (s) {
     if (!s) {
-      return;
+      return
     }
-    let stringifyS = String(s);
+    let stringifyS = String(s)
     // next line is for superset series that should have the same color
-    stringifyS = stringifyS.replace('---', '');
+    stringifyS = stringifyS.replace('---', '')
     if (seen[stringifyS] === undefined) {
-      seen[stringifyS] = Object.keys(seen).length;
+      seen[stringifyS] = Object.keys(seen).length
     }
     /* eslint consistent-return: 0 */
-    return bnbColors[seen[stringifyS] % bnbColors.length];
-  };
-}());
+    return bnbColors[seen[stringifyS] % bnbColors.length]
+  }
+}())
