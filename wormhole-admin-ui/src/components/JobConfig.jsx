@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
+import $ from 'jquery'
 import RaisedButton from 'material-ui/RaisedButton'
 import { Card, CardHeader } from 'material-ui/Card'
 import SelectField from 'material-ui/SelectField'
@@ -21,6 +22,22 @@ import TextFieldGroup from './TextFieldGroup'
 
 import '../containers/view.css'
 import './JobConfig.css'
+
+const amountScrolled = 200
+$(window).scroll(function () {
+  if ($(window).scrollTop() > amountScrolled) {
+    $('.back-to-top').addClass('show')
+  } else {
+    $('.back-to-top').removeClass('show')
+  }
+})
+
+function scrollTop () {
+  $('html, body').animate({
+    scrollTop: 0
+  }, 800)
+  return false
+}
 
 const propTypes = {
   job: PropTypes.object,
@@ -179,6 +196,9 @@ class JobConfig extends Component {
         fontSize: 18,
         margin: '12px 12px 0 0',
       },
+      floatRight: {
+        float: 'right',
+      }
     }
     const actions = [
       <FlatButton
@@ -199,16 +219,6 @@ class JobConfig extends Component {
         <Header selectedKey={2} />
         <div className="container">
           <h1 className="title">Create a new Job</h1>
-          <Grid>
-            <Row className="show-grid">
-              <Col xs={12} sm={6} md={4}>
-                {this.renderInputField()}
-              </Col>
-              <Col xs={12} sm={6} md={8}>
-                {this.renderSourceTree()}
-              </Col>
-            </Row>
-          </Grid>
           <div className="row-actions">
             <RaisedButton
               label="Save"
@@ -229,6 +239,17 @@ class JobConfig extends Component {
               icon={<i className="fa fa-arrow-left"></i>}
             />
           </div>
+          <Grid>
+            <Row className="show-grid">
+              <Col xs={12} sm={6} md={4}>
+                {this.renderInputField()}
+              </Col>
+              <Col xs={12} sm={6} md={8}>
+                {this.renderSourceTree()}
+              </Col>
+            </Row>
+          </Grid>
+          <button className="back-to-top" style={styles.floatRight} onClick={scrollTop}></button>
         </div>
         <Dialog
           title="Save Comfirmation"

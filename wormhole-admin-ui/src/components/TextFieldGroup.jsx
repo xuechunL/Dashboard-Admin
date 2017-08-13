@@ -6,6 +6,7 @@ import { GridList } from 'material-ui/GridList'
 import { Card, CardHeader } from 'material-ui/Card'
 import { updateDatasource, fetchDatasource } from '../actions/datasourceActions'
 import { updateJob } from '../actions/jobActions'
+import { fetchData } from '../utils/httpUtils'
 
 import { muiTheme } from '../muiTheme'
 
@@ -13,6 +14,7 @@ const propTypes = {
   job: PropTypes.object,
   edit: PropTypes.bool,
   type: PropTypes.string.isRequired,
+  sourceID: PropTypes.number,
   datasource: PropTypes.object,
   fetchDatasource: PropTypes.func,
   updateDatasource: PropTypes.func,
@@ -21,13 +23,12 @@ const propTypes = {
 class TextFieldGroup extends Component {
   constructor (props) {
     super(props)
-    const { datasource } = props
 
     this.state = {
-      host: datasource.db.host || '',
-      port: datasource.db.port || 0,
-      username: datasource.db.username || '',
-      password: datasource.db.password || '',
+      host: '',
+      port: 0,
+      username: '',
+      password: '',
     }
 
     this.handleChange = this.handleChange.bind(this)
@@ -38,10 +39,21 @@ class TextFieldGroup extends Component {
   }
 
   componentWillMount () {
-    if (this.props.type === 'datasource') {
-      const { db } = this.props.datasource
-      console.log('DATASOURCE TEXTFIELD', db)
-      this.setState(db)
+    if (this.props.type === 'datasource' && this.props.sourceID !== 0) {
+      fetchData(`/datasources/${this.props.sourceID}`).then(function (json) {
+        console.log(json)
+        const { db } = json
+        this.setState({
+          host: db.host || '',
+          port: db.port || 0,
+          username: db.username || '',
+          password: db.password || '',
+        })
+        this.props.fetchDatasource(json || {})
+        console.log('datasource view props', this.props)
+      }.bind(this), function (error) {
+        console.error('error', error)
+      })
     } else {
       const { target } = this.props.job
       console.log('JOB TEXTFIELD', target)

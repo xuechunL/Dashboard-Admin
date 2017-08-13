@@ -10,7 +10,7 @@ import Divider from 'material-ui/Divider'
 import Checkbox from 'material-ui/Checkbox'
 import TextField from 'material-ui/TextField'
 import { muiTheme } from '../muiTheme'
-import { updateJob, fetchSchemas } from '../actions/jobActions'
+import { updateJob } from '../actions/jobActions'
 import { isEmpty } from '../validators'
 import { fetchData } from '../utils/httpUtils'
 import { fetchDatasources } from '../actions/datasourceActions'
@@ -40,7 +40,7 @@ class SourceRoute extends Component {
     return { muiTheme }
   }
 
-  componentWillMount () {
+  componentDidMount () {
     fetchData(`/datasources`).then(function (json) {
       console.log(json)
       this.props.fetchDatasources(json || [])
@@ -121,10 +121,9 @@ class SourceRoute extends Component {
       this.mapToSource(value)
     }
   }
-  //FIXME:
-  selectTable (value, event) {
+  //TODO:
+  selectTable (value) {
     console.log(value)
-
   }
 
   handleSoureRouteChange (event) {
@@ -178,6 +177,7 @@ class SourceRoute extends Component {
               <List>
                 {
                   this.state.schemas.map((sc, index) => {
+                    const isOpen = sc.table.length <= 5
                     return (
                       <ListItem
                         key={index}
@@ -185,7 +185,7 @@ class SourceRoute extends Component {
                         leftCheckbox={
                           <Checkbox onCheck={event => this.selectAllTablesInSchema(sc, event)} />
                         }
-                        initiallyOpen={true}
+                        initiallyOpen={isOpen}
                         primaryTogglesNestedList={true}
                         nestedItems={
                           sc.table.map((t, index) => {

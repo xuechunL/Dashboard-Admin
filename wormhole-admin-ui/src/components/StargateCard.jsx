@@ -66,8 +66,8 @@ class StargateCard extends Component {
     console.log('props stargates', stargates)
 
     let addedStargates = []
-    job.stargates.map((x) => {
-      stargates.map((p) => {
+    job.stargates.map(x => {
+      stargates.map(p => {
         if (p.id === x)
           addedStargates.push(p)
       })

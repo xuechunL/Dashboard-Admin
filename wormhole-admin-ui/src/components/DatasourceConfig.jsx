@@ -32,7 +32,6 @@ class DatasourceConfig extends Component {
     super(props)
     const url = window.location.href
     const id = url.split('/').pop() !== 'add' ? url.split('/').pop() : 0
-    console.log(id)
 
     this.state = {
       edit: url.indexOf('view') < 0,
@@ -55,8 +54,9 @@ class DatasourceConfig extends Component {
     return { muiTheme }
   }
 
-  componentWillMount () {
-    console.log(this.state.sourceID)
+  //FIXME: ajax aynsc ??
+  componentDidMount () {
+    console.log('DatasourceConfig componentDidMount')
     if (this.state.sourceID !== 0) {
       fetchData(`/datasources/${this.state.sourceID}`).then(function (json) {
         console.log(json)
@@ -69,6 +69,13 @@ class DatasourceConfig extends Component {
         console.error('error', error)
       })
     }
+  }
+
+  // FIXME: why this.props not update
+  componentWillReceiveProps () {
+    console.log('DatasourceConfig componentWillReceiveProps')
+    console.log('state:', this.state)
+    console.log('props:', this.props)
   }
 
   handleRequestClose () {
@@ -155,15 +162,41 @@ class DatasourceConfig extends Component {
       />,
     ]
 
+    console.log('DatasourceConfig render')
+
     return (
       <div className="view config-view">
         <Header selectedKey={1} />
         <div className="container">
           <h1 className="title">Create a new Datasource</h1>
+          <div className="row-actions">
+            {
+              this.state.edit
+                ? <RaisedButton
+                  label="Save"
+                  labelPosition="before"
+                  labelColor="#fff"
+                  primary={true}
+                  style={styles.btn}
+                  onClick={this.handleOpenDialog}
+                  icon={<i className="fa fa-save"></i>}
+                />
+                : ''
+            }
+            <RaisedButton
+              label="Back"
+              labelPosition="before"
+              labelColor="#fff"
+              primary={true}
+              style={styles.btn}
+              onClick={this.back}
+              icon={<i className="fa fa-arrow-left"></i>}
+            />
+          </div>
           <Grid>
             <Row className="show-grid">
               <Col xs={12} md={12}>
-                <TextFieldGroup datasource={this.props.datasource} type="datasource" edit={this.state.edit} />
+                <TextFieldGroup sourceID={this.state.sourceID} type="datasource" edit={this.state.edit} />
               </Col>
             </Row>
             <Row className="show-grid">
@@ -211,30 +244,6 @@ class DatasourceConfig extends Component {
               </Col>
             </Row>
           </Grid>
-          <div className="row-actions">
-            {
-              this.state.edit
-                ? <RaisedButton
-                  label="Save"
-                  labelPosition="before"
-                  labelColor="#fff"
-                  primary={true}
-                  style={styles.btn}
-                  onClick={this.handleOpenDialog}
-                  icon={<i className="fa fa-save"></i>}
-                />
-                : ''
-            }
-            <RaisedButton
-              label="Back"
-              labelPosition="before"
-              labelColor="#fff"
-              primary={true}
-              style={styles.btn}
-              onClick={this.back}
-              icon={<i className="fa fa-arrow-left"></i>}
-            />
-          </div>
         </div>
         <Dialog
           title="Save Comfirmation"
